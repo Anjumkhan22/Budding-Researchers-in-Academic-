@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budding Researchers</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<!-- ── Auth Screens ──────────────────────────────────────── -->
+<div id="auth-screen" class="auth-wrap">
+  <!-- Login -->
+  <div id="login-card" class="auth-card">
+    <h1>🎓 Budding Researchers</h1>
+    <p class="subtitle">Connect with fellow researchers, share ideas and grow together.</p>
+    <form id="login-form">
+      <div class="form-group">
+        <label for="login-username">Username</label>
+        <input id="login-username" type="text" placeholder="your_username" autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+      </div>
+      <p id="login-error" class="error-msg hidden"></p>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:.75rem">Sign In</button>
+    </form>
+    <p style="text-align:center;margin-top:1rem;font-size:.9rem;color:var(--muted)">
+      New here? <button class="link-btn" id="show-register">Create account</button>
+    </p>
+  </div>
+
+  <!-- Register -->
+  <div id="register-card" class="auth-card hidden">
+    <h1>🎓 Create Account</h1>
+    <p class="subtitle">Join our community of budding researchers.</p>
+    <form id="register-form">
+      <div class="form-group">
+        <label for="reg-username">Username</label>
+        <input id="reg-username" type="text" placeholder="your_username" autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input id="reg-password" type="password" placeholder="at least 6 characters" autocomplete="new-password" required />
+      </div>
+      <div class="form-group">
+        <label for="reg-field">Research Field</label>
+        <input id="reg-field" type="text" placeholder="e.g. Machine Learning, Ecology…" />
+      </div>
+      <div class="form-group">
+        <label for="reg-bio">Short Bio</label>
+        <textarea id="reg-bio" rows="2" placeholder="Tell others about your research interests…" style="resize:vertical"></textarea>
+      </div>
+      <p id="register-error" class="error-msg hidden"></p>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:.75rem">Register</button>
+    </form>
+    <p style="text-align:center;margin-top:1rem;font-size:.9rem;color:var(--muted)">
+      Already have an account? <button class="link-btn" id="show-login">Sign in</button>
+    </p>
+  </div>
+</div>
+
+<!-- ── Main App ───────────────────────────────────────────── -->
+<div id="app-screen" class="app hidden">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>🎓 Budding Researchers</h2>
+      <div class="username" id="sidebar-username"></div>
+    </div>
+
+    <div class="sidebar-nav">
+      <button class="nav-tab active" data-panel="chat">💬 Chat</button>
+      <button class="nav-tab" data-panel="ideas">💡 Ideas</button>
+    </div>
+
+    <!-- Chat rooms panel -->
+    <div id="rooms-panel" class="rooms-list">
+      <div style="padding:.25rem .5rem;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Rooms</div>
+      <div id="rooms-list"></div>
+      <button class="btn btn-secondary btn-sm" id="new-room-btn" style="width:100%;margin-top:.5rem">+ New Room</button>
+    </div>
+
+    <!-- Ideas panel (sidebar) -->
+    <div id="ideas-panel" class="rooms-list hidden">
+      <div style="padding:.25rem .5rem;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Ideas Board</div>
+      <p style="font-size:.8rem;color:var(--muted);padding:.5rem">Browse and share research ideas in the main panel →</p>
+    </div>
+
+    <div class="sidebar-footer">
+      <span id="online-count">🟢 Online</span>
+      <button class="btn btn-secondary btn-sm" id="logout-btn">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <!-- Welcome / placeholder -->
+    <div id="welcome-view" class="welcome">
+      <div style="font-size:3rem">🔬</div>
+      <h2>Welcome to Budding Researchers!</h2>
+      <p>Select a chat room on the left to start discussing, or switch to the 💡 Ideas tab.</p>
+    </div>
+
+    <!-- Chat view -->
+    <div id="chat-view" class="hidden" style="display:flex;flex-direction:column;height:100%">
+      <div class="chat-header">
+        <div>
+          <h3 id="room-name"></h3>
+          <p id="room-desc"></p>
+        </div>
+      </div>
+      <div class="messages-area" id="messages-area"></div>
+      <div class="typing-indicator" id="typing-indicator"></div>
+      <div class="chat-input-area">
+        <input id="msg-input" type="text" placeholder="Share your thoughts…" autocomplete="off" />
+        <button class="btn btn-primary" id="send-btn">Send</button>
+      </div>
+    </div>
+
+    <!-- Ideas board view -->
+    <div id="ideas-view" class="hidden" style="display:flex;flex-direction:column;height:100%">
+      <div class="ideas-header">
+        <div>
+          <h3>💡 Research Ideas Board</h3>
+          <p style="font-size:.8rem;color:var(--muted)">Share and discover research ideas</p>
+        </div>
+        <button class="btn btn-primary btn-sm" id="new-idea-btn">+ Share Idea</button>
+      </div>
+      <div class="ideas-board" id="ideas-board"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ── New Room Modal ─────────────────────────────────────── -->
+<div id="new-room-modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h3>Create a New Room</h3>
+    <div class="form-group">
+      <label>Room Name</label>
+      <input id="new-room-name" type="text" placeholder="e.g. Quantum Computing" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input id="new-room-desc" type="text" placeholder="What will you discuss?" />
+    </div>
+    <p id="room-error" class="error-msg hidden"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="cancel-room-btn">Cancel</button>
+      <button class="btn btn-primary" id="create-room-btn">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── New Idea Modal ─────────────────────────────────────── -->
+<div id="new-idea-modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h3>Share a Research Idea</h3>
+    <div class="form-group">
+      <label>Title</label>
+      <input id="idea-title" type="text" placeholder="Brief title for your idea" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="idea-body" rows="4" placeholder="Describe your research idea in detail…" style="resize:vertical;width:100%;padding:.6rem .8rem;border:1px solid var(--border);border-radius:8px;font-size:.95rem"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Tags <span style="font-weight:400;color:var(--muted)">(comma-separated)</span></label>
+      <input id="idea-tags" type="text" placeholder="e.g. AI, climate, biology" />
+    </div>
+    <p id="idea-error" class="error-msg hidden"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="cancel-idea-btn">Cancel</button>
+      <button class="btn btn-primary" id="submit-idea-btn">Share</button>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

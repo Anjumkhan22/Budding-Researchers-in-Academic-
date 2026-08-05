@@ -1,0 +1,32 @@
+{
+  "name": "budding-researchers-in-academic-",
+  "version": "1.0.0",
+  "description": "a platform where new researchers in the academic field  can chat and exchange ideas",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --testPathPatterns=tests/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/Anjumkhan22/Budding-Researchers-in-Academic-"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "csrf": "^3.1.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.2",
+    "express-session": "^1.19.0",
+    "socket.io": "^4.8.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
+  }
+}
