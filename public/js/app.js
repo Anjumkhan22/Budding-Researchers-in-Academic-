@@ -6,17 +6,29 @@ let currentRoom = null;
 let socket = null;
 let typingTimer = null;
 let activePanel = 'chat';
+let csrfToken = null;
 
 /* ── DOM helpers ───────────────────────────────────────── */
 const $ = id => document.getElementById(id);
 const show = el => el.classList.remove('hidden');
 const hide = el => el.classList.add('hidden');
 
+/* ── CSRF token fetch ──────────────────────────────────── */
+async function refreshCsrf() {
+  const res = await fetch('/api/csrf-token', { credentials: 'include' });
+  const data = await res.json();
+  csrfToken = data.csrfToken;
+  return csrfToken;
+}
+
 /* ── API helpers ───────────────────────────────────────── */
 async function api(method, path, body) {
+  const headers = {};
+  if (body) headers['Content-Type'] = 'application/json';
+  if (method !== 'GET') headers['x-csrf-token'] = csrfToken;
   const res = await fetch('/api' + path, {
     method,
-    headers: body ? { 'Content-Type': 'application/json' } : {},
+    headers,
     body: body ? JSON.stringify(body) : undefined,
     credentials: 'include',
   });
@@ -316,6 +328,7 @@ function escapeHtml(str) {
 
 /* ── Check existing session ────────────────────────────── */
 (async () => {
+  await refreshCsrf();
   try {
     const user = await api('GET', '/me');
     initApp(user);
