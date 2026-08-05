@@ -64,8 +64,6 @@ function createApp() {
     next();
   }
 
-  app.use('/api', csrfProtection, routes);
-
   // Rate-limit auth endpoints to prevent brute-force
   const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -76,6 +74,8 @@ function createApp() {
   });
   app.use('/api/login', authLimiter);
   app.use('/api/register', authLimiter);
+
+  app.use('/api', csrfProtection, routes);
 
   const io = new Server(server);
 
