@@ -5,6 +5,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const session = require('express-session');
 const Csrf = require('csrf');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const routes = require('./routes');
 const { attachSocket } = require('./socket');
@@ -64,6 +65,17 @@ function createApp() {
   }
 
   app.use('/api', csrfProtection, routes);
+
+  // Rate-limit auth endpoints to prevent brute-force
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' },
+  });
+  app.use('/api/login', authLimiter);
+  app.use('/api/register', authLimiter);
 
   const io = new Server(server);
 
